@@ -161,7 +161,9 @@ Discord / Inngest values.
 ## Getting started
 
 See **[SETUP.md](./SETUP.md)** for the full step-by-step walkthrough (accounts,
-keys, local run, Slack/Discord wiring, and Vercel deployment).
+keys, local run, Slack/Discord wiring, and Vercel deployment), and
+**[DESIGN.md](./DESIGN.md)** for the system design (architecture, data flow, the
+RAG subsystem, knowledge graph, scaling).
 
 Quick version once `.env.local` has the three core keys (`DATABASE_URL`,
 `GROQ_API_KEY`, `JINA_API_KEY`):
