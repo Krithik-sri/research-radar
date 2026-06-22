@@ -22,6 +22,7 @@ import { ingestPapers } from "@/lib/kb/ingest";
 import { RateLimitError } from "@/lib/llm/errors";
 
 const SOURCE = "arxiv";
+const ts = () => new Date().toLocaleTimeString();
 
 async function main() {
   const now = new Date();
@@ -55,15 +56,16 @@ async function main() {
       });
 
     try {
-      console.log(`▶  ${w.label}: fetching arXiv...`);
+      console.log(`\n▶  [${ts()}] ${w.label}: fetching arXiv (${categories.join(", ")})…`);
       const raws = await fetchArxivWindow({
         categories,
         start: w.start,
         end: w.end,
+        log: console.log,
       });
-      console.log(`   ${raws.length} papers found — ingesting...`);
+      console.log(`   [${ts()}] ${raws.length} papers found — ingesting…`);
 
-      const stats = await ingestPapers(raws);
+      const stats = await ingestPapers(raws, { log: console.log });
 
       await db
         .update(crawlRuns)

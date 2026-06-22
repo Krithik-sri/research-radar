@@ -36,6 +36,8 @@ export interface IngestOptions {
   withSimilarityEdges?: boolean;
   /** Enrich with Semantic Scholar citations + reference edges (default true). */
   withS2?: boolean;
+  /** Optional progress logger (e.g. console.log) for the backfill. */
+  log?: (msg: string) => void;
 }
 
 /** Map a RawPaper to the columns shared by stub and full inserts. */
@@ -60,6 +62,7 @@ export async function ingestPapers(
 ): Promise<IngestStats> {
   const withSimilarityEdges = opts.withSimilarityEdges ?? true;
   const withS2 = opts.withS2 ?? true;
+  const log = opts.log ?? (() => {});
 
   const stats: IngestStats = {
     found: raws.length,
@@ -90,6 +93,7 @@ export async function ingestPapers(
   const done = new Set(doneRows.map((r) => r.arxivId));
   stats.alreadyDone = done.size;
   const todo = unique.filter((r) => !done.has(r.arxivId));
+  log(`  ingest: ${unique.length} unique · ${stats.alreadyDone} already done · ${todo.length} to scan`);
 
   // Topic slug -> id lookup (table is seeded once via scripts/seed-topics).
   const topicRows = await db.select({ id: topics.id, slug: topics.slug }).from(topics);
@@ -102,6 +106,7 @@ export async function ingestPapers(
     // 1. Cheap keyword gate — no paid call for obviously-irrelevant papers.
     if (!passesKeywordGate(r.title, r.abstract)) continue;
     stats.gated += 1;
+    log(`  [${stats.gated}] ${r.arxivId} — "${r.title.slice(0, 70)}"`);
 
     // 2. LLM relevance + topic classification.
     const classification = await classifyPaper(r.title, r.abstract);
@@ -116,9 +121,11 @@ export async function ingestPapers(
           target: papers.arxivId,
           set: { relevant: false, processedAt: new Date() },
         });
+      log(`        ↳ off-topic, skipped`);
       continue;
     }
     stats.relevant += 1;
+    log(`        ↳ relevant (${classification.topics.map((t) => t.slug).join(", ")}) — summarizing + embedding…`);
 
     // 3. Summarize + 4. embed.
     const summary = await summarizePaper(r.title, r.abstract);
@@ -176,10 +183,12 @@ export async function ingestPapers(
     }
 
     stats.upserted += 1;
+    log(`        ↳ stored ✓`);
   }
 
   // 8. Semantic Scholar enrichment → citation edges (best-effort, batched).
   if (withS2 && relevantIds.length) {
+    log(`  enriching ${relevantIds.length} paper(s) via Semantic Scholar…`);
     try {
       const enrichment = await enrichWithS2(relevantIds);
       for (const [arxivId, e] of enrichment) {

@@ -63,8 +63,10 @@ export async function fetchArxivWindow(opts: {
   start: Date;
   end: Date;
   maxPages?: number;
+  /** Optional progress logger (e.g. console.log) for the backfill. */
+  log?: (msg: string) => void;
 }): Promise<RawPaper[]> {
-  const { categories, start, end, maxPages = 50 } = opts;
+  const { categories, start, end, maxPages = 50, log } = opts;
   const catClause = categories.map((c) => `cat:${c}`).join("+OR+");
   const dateClause = `submittedDate:[${fmtDate(start)}+TO+${fmtDate(end)}]`;
   const searchQuery = `(${catClause})+AND+${dateClause}`;
@@ -88,6 +90,7 @@ export async function fetchArxivWindow(opts: {
       const p = toRawPaper(e);
       if (p.arxivId) byId.set(p.arxivId, p);
     }
+    log?.(`     arXiv page ${page + 1}: +${entries.length} (running total ${byId.size})`);
     if (entries.length < PAGE_SIZE) break;
     await sleep(REQUEST_DELAY_MS);
   }

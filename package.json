@@ -15,6 +15,7 @@
     "seed:topics": "tsx scripts/seed-topics.ts",
     "backfill": "tsx scripts/trigger-backfill.ts",
     "test:llm": "tsx scripts/test-llm.ts",
+    "ask": "tsx scripts/ask.ts",
     "discord:register": "tsx scripts/register-discord-commands.ts",
     "inngest:dev": "inngest-cli dev"
   },

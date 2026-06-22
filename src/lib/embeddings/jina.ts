@@ -36,7 +36,9 @@ async function embedMany(texts: string[]): Promise<number[][]> {
 
     if (res.status === 429 || res.status >= 500) {
       last429 = res.status === 429;
-      await sleep(2000 * 2 ** attempt);
+      const delay = 2000 * 2 ** attempt;
+      console.warn(`        ⏳ jina ${res.status} — retry ${attempt + 1}/5 in ${delay / 1000}s`);
+      await sleep(delay);
       continue;
     }
     if (!res.ok) throw new Error(`Jina embed ${res.status}: ${await res.text()}`);
