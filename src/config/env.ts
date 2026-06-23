@@ -65,6 +65,12 @@ export const env = {
     return opt("JINA_MODEL", "jina-embeddings-v3");
   },
 
+  // RAG: cosine similarity floor — below this, a paper is treated as "not a real
+  // match" so /ask says "nothing relevant" instead of returning far-off papers.
+  get ragMinSimilarity() {
+    return Number(opt("RAG_MIN_SIMILARITY", "0.5"));
+  },
+
   // Gemini (embeddings + chat when LLM_PROVIDER=gemini)
   get geminiKey() {
     return req("GEMINI_API_KEY");

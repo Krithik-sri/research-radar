@@ -25,18 +25,27 @@ const TOPIC_LIST = TOPICS.map((t) => `- ${t.slug}: ${t.name} — ${t.description
  */
 export async function classifyPaper(title: string, abstract: string): Promise<Classification> {
   const system =
-    "You are a research librarian specializing in LLM and agent POST-TRAINING " +
-    "(everything after pretraining: SFT, RLHF, RLVR, preference optimization, reward " +
-    "modeling, distillation, reasoning/test-time-compute, agentic RL, synthetic data). " +
-    "Classify papers into the given topic taxonomy. A paper is RELEVANT only if it is " +
-    "substantively about post-training methods/data/analysis (not pure pretraining, " +
-    "architecture, or unrelated ML).";
+    "You are a strict research librarian for a team that studies POST-TRAINING of " +
+    "large language models and LLM-based agents (everything after pretraining: SFT/" +
+    "instruction tuning, RLHF, RLVR, preference optimization e.g. DPO, reward modeling, " +
+    "distillation, reasoning/test-time-compute, agentic RL, synthetic data for LLMs).\n\n" +
+    "A paper is RELEVANT only if it is substantively about TRAINING or fine-tuning " +
+    "language models / LLM agents with one of those methods. Be strict — default to " +
+    "relevant=false when unsure.\n\n" +
+    "NOT relevant (set relevant=false even if a keyword appears): pure pretraining or " +
+    "model architecture; classical ML / time-series / concept-drift; computer vision, " +
+    "robotics or motion generation; generic multi-agent systems not about LLM training; " +
+    "optimization/learning theory; NLP task benchmarks (translation, idioms, NER) that " +
+    "don't propose a post-training method; applications that merely USE an LLM without " +
+    "training it. Matching a keyword (e.g. 'alignment' in 'idiom alignment', 'agent' in a " +
+    "non-LLM multi-agent paper) is NOT enough.";
 
   const user =
     `Topics:\n${TOPIC_LIST}\n\n` +
     `Paper title: ${title}\n\nAbstract: ${abstract}\n\n` +
-    `Respond as JSON: {"relevant": boolean, "topics": [{"slug": "<one of the topic slugs>", "confidence": 0..1}]}. ` +
-    `Assign 1-3 topics, most confident first. If not relevant to post-training, set relevant=false and topics=[].`;
+    `First decide relevance per the strict criteria. Respond as JSON: ` +
+    `{"relevant": boolean, "topics": [{"slug": "<one of the topic slugs>", "confidence": 0..1}]}. ` +
+    `If relevant, assign 1-3 topics (most confident first). If not, set relevant=false and topics=[].`;
 
   const result = await chatJSON<Classification>(
     [

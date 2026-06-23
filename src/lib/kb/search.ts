@@ -3,6 +3,7 @@ import { db } from "@/lib/db/client";
 import { papers, paperTopics, topics } from "@/lib/db/schema";
 import { embed } from "@/lib/embeddings";
 import { chat } from "@/lib/llm/openrouter";
+import { env } from "@/config/env";
 
 /** Format a JS number[] as a pgvector literal: "[1,2,3]". */
 export function toVectorLiteral(v: number[]): string {
@@ -63,9 +64,9 @@ export interface SearchHit {
  */
 export async function semanticSearch(
   query: string,
-  opts: { limit?: number; topicSlug?: string } = {},
+  opts: { limit?: number; topicSlug?: string; minSimilarity?: number } = {},
 ): Promise<SearchHit[]> {
-  const { limit = 8, topicSlug } = opts;
+  const { limit = 8, topicSlug, minSimilarity } = opts;
   const queryEmbedding = await embed(query);
   const vec = toVectorLiteral(queryEmbedding);
   const similarity = sql<number>`1 - (${papers.embedding} <=> ${vec}::vector)`;
@@ -99,7 +100,7 @@ export async function semanticSearch(
     .orderBy(sql`${papers.embedding} <=> ${vec}::vector`)
     .limit(limit);
 
-  return rows;
+  return minSimilarity ? rows.filter((r) => r.similarity >= minSimilarity) : rows;
 }
 
 /**
@@ -110,12 +111,16 @@ export async function askKnowledgeBase(
   question: string,
   opts: { topicSlug?: string } = {},
 ): Promise<{ answer: string; sources: SearchHit[] }> {
-  const sources = await semanticSearch(question, { limit: 8, topicSlug: opts.topicSlug });
+  const sources = await semanticSearch(question, {
+    limit: 8,
+    topicSlug: opts.topicSlug,
+    minSimilarity: env.ragMinSimilarity,
+  });
 
   if (sources.length === 0) {
     return {
       answer:
-        "I couldn't find anything relevant in the knowledge base yet. The crawler may not have ingested papers on this topic.",
+        "I couldn't find papers relevant to that in the knowledge base. Either it hasn't been ingested yet (the backfill may still be running) or there's no close match — try rephrasing, or ask again once more papers are indexed.",
       sources: [],
     };
   }
