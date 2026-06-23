@@ -1,20 +1,32 @@
-/* ── Research Radar — dark design system ──────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap");
+
+/* ── Research Radar — premium dark design system ──────────────────────── */
 :root {
-  --bg: #0b0d12;
-  --surface: #14171f;
-  --surface-2: #1b1f29;
-  --surface-3: #232838;
-  --border: #262b36;
-  --border-2: #36405a;
-  --text: #e6e8ee;
-  --muted: #8b93a7;
-  --accent: #6366f1;
-  --accent-2: #22d3ee;
-  --accent-hover: #818cf8;
-  --success: #34d399;
-  --danger: #f87171;
-  --radius: 12px;
-  --shadow: 0 6px 28px rgba(0, 0, 0, 0.45);
+  --bg: #07080c;
+  --bg-2: #0c0e15;
+  --surface: #11131c;
+  --surface-2: #171a25;
+  --surface-3: #1e2230;
+  --glass: rgba(255, 255, 255, 0.035);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-2: rgba(255, 255, 255, 0.16);
+  --text: #e9ebf2;
+  --muted: #99a1b7;
+  --accent: #7c8cff;
+  --accent-2: #2ad7d0;
+  --accent-3: #f472b6;
+  --accent-hover: #9aa6ff;
+  --success: #4ade80;
+  --danger: #fb7185;
+  --grad: linear-gradient(135deg, #7c8cff 0%, #2ad7d0 100%);
+  --grad-tri: linear-gradient(120deg, #7c8cff 0%, #c084fc 45%, #2ad7d0 100%);
+  --radius: 16px;
+  --radius-sm: 11px;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 8px 30px rgba(124, 140, 255, 0.18);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", var(--font-sans);
 }
 
 * {
@@ -26,16 +38,44 @@ body {
   padding: 0;
 }
 body {
-  background:
-    radial-gradient(1100px 560px at 50% -12%, #171b29 0%, rgba(23, 27, 41, 0) 62%),
-    var(--bg);
-  background-attachment: fixed;
+  background: var(--bg);
   color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.55;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
 }
 
+/* Ambient aurora — fixed, behind everything, gently drifting. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20% -10% auto -10%;
+  height: 80vh;
+  z-index: -1;
+  background:
+    radial-gradient(48% 55% at 18% 12%, rgba(124, 140, 255, 0.22), transparent 70%),
+    radial-gradient(42% 50% at 82% 8%, rgba(42, 215, 208, 0.16), transparent 70%),
+    radial-gradient(40% 60% at 60% 30%, rgba(192, 132, 252, 0.14), transparent 70%);
+  filter: blur(30px);
+  animation: drift 22s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes drift {
+  to {
+    transform: translate3d(-3%, 2%, 0) scale(1.08);
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
 a {
   color: var(--accent-hover);
   text-decoration: none;
@@ -43,11 +83,6 @@ a {
 }
 a:hover {
   color: var(--accent-2);
-}
-h1,
-h2,
-h3 {
-  letter-spacing: -0.01em;
 }
 code {
   background: var(--surface-2);
@@ -57,8 +92,7 @@ code {
   font-size: 0.85em;
 }
 ::selection {
-  background: var(--accent);
-  color: #fff;
+  background: rgba(124, 140, 255, 0.35);
 }
 
 ::-webkit-scrollbar {
@@ -66,45 +100,57 @@ code {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a3040;
+  background: #262b3a;
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-2);
+  background: #333a4d;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 0 16px 48px;
+  padding: 0 20px 56px;
 }
 
-/* ── Nav ──────────────────────────────────────────────────────────────── */
+.gradient-text {
+  background: var(--grad-tri);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ── Nav (glass) ──────────────────────────────────────────────────────── */
 .nav {
   position: sticky;
   top: 0;
   z-index: 50;
   display: flex;
-  gap: 18px;
+  gap: 22px;
   align-items: center;
-  padding: 13px 0;
-  margin-bottom: 22px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(11, 13, 18, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 0;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(7, 8, 12, 0.6);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 .nav .brand {
+  font-family: var(--font-display);
   font-weight: 700;
+  font-size: 15px;
 }
 .nav-link {
   color: var(--muted);
   font-size: 14px;
+  font-weight: 500;
   position: relative;
   padding: 4px 2px;
+  transition: color 0.15s ease;
 }
 .nav-link:hover {
   color: var(--text);
@@ -117,33 +163,45 @@ code {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -14px;
+  bottom: -15px;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background: var(--grad);
+  box-shadow: 0 0 10px rgba(124, 140, 255, 0.6);
 }
 
-/* ── Components ───────────────────────────────────────────────────────── */
+/* ── Cards / glass ────────────────────────────────────────────────────── */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
   transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+    transform 0.2s cubic-bezier(0.21, 1.02, 0.73, 1),
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--border-2);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--shadow-glow);
+}
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
 }
 
+/* ── Buttons ──────────────────────────────────────────────────────────── */
 .btn {
   font: inherit;
   font-size: 14px;
-  padding: 9px 16px;
-  border-radius: 10px;
+  font-weight: 500;
+  padding: 9px 17px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--surface-2);
   color: var(--text);
@@ -151,10 +209,11 @@ code {
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
-    transform 0.08s ease;
+    transform 0.08s ease,
+    box-shadow 0.2s ease;
 }
 .btn:hover {
-  border-color: var(--accent);
+  border-color: var(--border-2);
   background: var(--surface-3);
 }
 .btn:active {
@@ -165,45 +224,53 @@ code {
   cursor: default;
 }
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), #4f46e5);
+  background: var(--grad);
   border: none;
-  color: #fff;
+  color: #08090d;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(124, 140, 255, 0.25);
 }
 .btn-primary:hover {
-  filter: brightness(1.1);
-  border: none;
-  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  filter: brightness(1.08);
+  background: var(--grad);
+  box-shadow: 0 6px 26px rgba(124, 140, 255, 0.42);
 }
 
+/* ── Inputs ───────────────────────────────────────────────────────────── */
 .input {
   font: inherit;
   font-size: 15px;
-  padding: 10px 13px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--text);
   outline: none;
   transition:
     border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    box-shadow 0.15s ease,
+    background 0.15s ease;
 }
 .input::placeholder {
   color: var(--muted);
 }
 .input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(124, 140, 255, 0.22);
 }
 
+/* ── Chips / badges ───────────────────────────────────────────────────── */
 .chip {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   font-size: 12px;
-  padding: 2px 9px;
+  font-weight: 500;
+  padding: 3px 10px;
   border-radius: 999px;
-  background: rgba(99, 102, 241, 0.14);
+  background: rgba(124, 140, 255, 0.12);
   color: var(--accent-hover);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(124, 140, 255, 0.22);
 }
 
 /* ── Animations ───────────────────────────────────────────────────────── */
@@ -218,7 +285,7 @@ code {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -232,29 +299,27 @@ code {
 }
 @keyframes shimmer {
   0% {
-    background-position: -400px 0;
+    background-position: -420px 0;
   }
   100% {
-    background-position: 400px 0;
+    background-position: 420px 0;
   }
 }
 @keyframes pulse {
   0%,
   100% {
-    opacity: 0.35;
+    opacity: 0.3;
   }
   50% {
     opacity: 1;
   }
 }
-
 .fade-in {
-  animation: fadeIn 0.25s ease both;
+  animation: fadeIn 0.3s ease both;
 }
 .slide-up {
-  animation: slideUp 0.28s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+  animation: slideUp 0.34s cubic-bezier(0.21, 1.02, 0.73, 1) both;
 }
-
 .spinner {
   width: 16px;
   height: 16px;
@@ -265,14 +330,12 @@ code {
   display: inline-block;
   vertical-align: middle;
 }
-
 .skeleton {
-  background: linear-gradient(90deg, #1a1e29 25%, #232b3a 37%, #1a1e29 63%);
+  background: linear-gradient(90deg, #14161f 25%, #1d2130 37%, #14161f 63%);
   background-size: 800px 100%;
   animation: shimmer 1.4s infinite linear;
   border-radius: 6px;
 }
-
 .dots span {
   animation: pulse 1.2s infinite;
 }
@@ -289,7 +352,8 @@ table {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  body::before {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }

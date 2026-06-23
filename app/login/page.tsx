@@ -42,12 +42,26 @@ export default function LoginPage() {
     >
       <div
         className="card slide-up"
-        style={{ width: 340, maxWidth: "100%", padding: 28 }}
+        style={{
+          width: 360,
+          maxWidth: "100%",
+          padding: 32,
+          boxShadow: "var(--shadow), var(--shadow-glow)",
+        }}
       >
-        <h1 style={{ fontSize: 22, marginTop: 0, marginBottom: 6 }}>
-          📡 Research Radar
+        <h1
+          className="gradient-text"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 28,
+            marginTop: 0,
+            marginBottom: 8,
+            lineHeight: 1.15,
+          }}
+        >
+          Research Radar
         </h1>
-        <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 0 }}>
+        <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 0, marginBottom: 0 }}>
           Enter the team password to continue.
         </p>
         <form
@@ -56,7 +70,7 @@ export default function LoginPage() {
             display: "flex",
             flexDirection: "column",
             gap: 12,
-            marginTop: 16,
+            marginTop: 22,
           }}
         >
           <input

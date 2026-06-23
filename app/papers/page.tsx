@@ -26,21 +26,24 @@ function fmtDate(d: string | null): string {
 }
 
 const th: React.CSSProperties = {
-  padding: "11px 14px",
+  padding: "13px 16px",
   textAlign: "left",
   fontSize: 11,
   fontWeight: 600,
-  letterSpacing: "0.06em",
+  letterSpacing: "0.07em",
   textTransform: "uppercase",
   color: "var(--muted)",
-  background: "var(--surface-2)",
+  background: "rgba(23, 26, 37, 0.85)",
+  backdropFilter: "blur(8px)",
+  WebkitBackdropFilter: "blur(8px)",
   borderBottom: "1px solid var(--border)",
   position: "sticky",
   top: 0,
+  zIndex: 1,
 };
 
 const td: React.CSSProperties = {
-  padding: "12px 14px",
+  padding: "14px 16px",
   borderBottom: "1px solid var(--border)",
   verticalAlign: "top",
 };
@@ -116,9 +119,20 @@ function PapersInner() {
 
   return (
     <main className="container" style={{ paddingTop: 8 }}>
-      <header className="slide-up" style={{ marginBottom: 18 }}>
-        <h1 style={{ fontSize: 26, margin: "0 0 2px" }}>📄 Papers</h1>
-        <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
+      <header className="slide-up" style={{ marginBottom: 22 }}>
+        <h1
+          className="gradient-text"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 30,
+            fontWeight: 700,
+            letterSpacing: "-0.025em",
+            margin: "0 0 4px",
+          }}
+        >
+          Papers
+        </h1>
+        <p style={{ color: "var(--muted)", fontSize: 14.5, margin: 0 }}>
           Browse the post-training paper knowledge base.
         </p>
       </header>
@@ -160,7 +174,16 @@ function PapersInner() {
           Search
         </button>
 
-        <span style={{ color: "var(--muted)", fontSize: 13, marginLeft: "auto" }}>
+        <span
+          style={{
+            color: "var(--muted)",
+            fontSize: 13,
+            marginLeft: "auto",
+            textAlign: "right",
+            fontVariantNumeric: "tabular-nums",
+            whiteSpace: "nowrap",
+          }}
+        >
           {total > 0 ? `Showing ${from}–${to} of ${total}` : "—"}
         </span>
       </div>
@@ -170,12 +193,19 @@ function PapersInner() {
         <div
           className="card fade-in"
           style={{
-            padding: "16px 18px",
+            padding: "18px 20px",
             color: "var(--danger)",
             fontSize: 14,
-            borderColor: "rgba(248,113,113,0.35)",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            background: "rgba(251, 113, 133, 0.06)",
+            borderColor: "rgba(251, 113, 133, 0.35)",
           }}
         >
+          <span aria-hidden style={{ fontSize: 16, lineHeight: 1 }}>
+            ⚠
+          </span>
           {error}
         </div>
       )}
@@ -220,13 +250,25 @@ function PapersInner() {
             <div
               className="fade-in"
               style={{
-                padding: "48px 16px",
+                padding: "60px 16px",
                 textAlign: "center",
                 color: "var(--muted)",
                 fontSize: 14,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 8,
               }}
             >
-              No papers match.
+              <span aria-hidden style={{ fontSize: 26, opacity: 0.6 }}>
+                🔍
+              </span>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, color: "var(--text)" }}>
+                No papers match
+              </span>
+              <span style={{ fontSize: 13 }}>
+                Try a different topic or search term.
+              </span>
             </div>
           ) : (
             <table style={{ fontSize: 14 }}>
@@ -247,20 +289,24 @@ function PapersInner() {
                     className="fade-in paper-row"
                     style={{ transition: "background 0.15s ease" }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "var(--surface-2)")
+                      (e.currentTarget.style.background =
+                        "rgba(255, 255, 255, 0.03)")
                     }
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.background = "transparent")
                     }
                   >
-                    <td style={{ ...td, maxWidth: 440 }}>
+                    <td style={{ ...td, maxWidth: 460 }}>
                       <a
                         href={p.url}
                         target="_blank"
                         rel="noreferrer"
                         style={{
                           color: "var(--accent-hover)",
-                          fontWeight: 600,
+                          fontFamily: "var(--font-display)",
+                          fontWeight: 500,
+                          fontSize: 14.5,
+                          letterSpacing: "-0.01em",
                           textDecoration: "none",
                         }}
                       >
@@ -325,9 +371,9 @@ function PapersInner() {
         <div
           style={{
             display: "flex",
-            gap: 8,
+            gap: 10,
             alignItems: "center",
-            marginTop: 18,
+            marginTop: 20,
           }}
         >
           <button
@@ -344,7 +390,18 @@ function PapersInner() {
           >
             Next ›
           </button>
-          <span style={{ color: "var(--muted)", fontSize: 13, marginLeft: 4 }}>
+          <span
+            style={{
+              color: "var(--muted)",
+              fontSize: 13,
+              marginLeft: "auto",
+              fontVariantNumeric: "tabular-nums",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Page {Math.floor(offset / PAGE_SIZE) + 1} of{" "}
+            {Math.max(1, Math.ceil(total / PAGE_SIZE))}
+            <span style={{ opacity: 0.5 }}> · </span>
             {from}–{to} of {total}
           </span>
         </div>

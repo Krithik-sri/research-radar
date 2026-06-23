@@ -87,40 +87,60 @@ export default function ChatPage() {
         display: "flex",
         flexDirection: "column",
         height: "calc(100vh - 130px)",
-        maxWidth: 760,
+        maxWidth: 800,
         margin: "0 auto",
         padding: "0 16px",
       }}
     >
-      <div style={{ paddingTop: 4, paddingBottom: 10 }}>
-        <h1 style={{ fontSize: 22, margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
-          <span aria-hidden>📡</span> Research Radar — Chat
+      <header style={{ paddingTop: 6, paddingBottom: 14 }}>
+        <h1
+          className="gradient-text"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 38,
+            lineHeight: 1.1,
+            margin: 0,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+          }}
+        >
+          Research Radar
         </h1>
-        <p style={{ color: "var(--muted)", fontSize: 13, margin: "4px 0 0" }}>
+        <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "8px 0 0", maxWidth: 540 }}>
           Conversational search over the post-training paper knowledge base.
         </p>
-      </div>
+      </header>
 
       <div
         style={{
           flex: 1,
           overflowY: "auto",
-          padding: "8px 4px 16px",
+          scrollBehavior: "smooth",
+          padding: "8px 4px 20px",
           display: "flex",
           flexDirection: "column",
-          gap: 16,
+          gap: 18,
         }}
       >
         {messages.length === 0 && (
-          <div className="fade-in" style={{ marginTop: 8 }}>
-            <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 12px" }}>
-              Try one of these:
+          <div className="fade-in" style={{ marginTop: 12 }}>
+            <p
+              style={{
+                color: "var(--muted)",
+                fontSize: 12,
+                textTransform: "uppercase",
+                letterSpacing: ".08em",
+                fontWeight: 600,
+                margin: "0 0 14px",
+              }}
+            >
+              Try one of these
             </p>
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                gap: 12,
+                gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+                gap: 14,
               }}
             >
               {SUGGESTIONS.map((s, i) => (
@@ -129,16 +149,30 @@ export default function ChatPage() {
                   onClick={() => send(s)}
                   className="card card-hover fade-in"
                   style={{
-                    animationDelay: `${i * 0.06}s`,
-                    padding: "14px 16px",
+                    animationDelay: `${i * 0.07}s`,
+                    padding: "18px 18px",
                     cursor: "pointer",
                     textAlign: "left",
                     color: "var(--text)",
                     font: "inherit",
-                    fontSize: 14,
-                    lineHeight: 1.4,
+                    fontSize: 14.5,
+                    lineHeight: 1.45,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
                   }}
                 >
+                  <span
+                    aria-hidden
+                    style={{
+                      flex: "none",
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: "var(--grad)",
+                      boxShadow: "0 0 10px rgba(124,140,255,.6)",
+                    }}
+                  />
                   {s}
                 </button>
               ))}
@@ -166,10 +200,11 @@ export default function ChatPage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 6,
-                  marginBottom: 5,
-                  fontSize: 12,
+                  gap: 7,
+                  marginBottom: 7,
+                  fontSize: 11.5,
                   fontWeight: 600,
+                  letterSpacing: ".02em",
                   color: "var(--muted)",
                   flexDirection: isUser ? "row-reverse" : "row",
                 }}
@@ -177,58 +212,67 @@ export default function ChatPage() {
                 <span
                   aria-hidden
                   style={{
-                    width: 7,
-                    height: 7,
+                    width: 8,
+                    height: 8,
                     borderRadius: "50%",
-                    background: isUser ? "var(--accent)" : "var(--success)",
+                    background: isUser ? "var(--accent)" : "var(--grad)",
+                    boxShadow: isUser
+                      ? "0 0 8px rgba(124,140,255,.55)"
+                      : "0 0 8px rgba(42,215,208,.55)",
                     display: "inline-block",
                   }}
                 />
                 {isUser ? "You" : "Radar"}
               </div>
               <div
+                className={isUser ? undefined : "glass"}
                 style={{
                   maxWidth: "86%",
-                  padding: "11px 14px",
-                  borderRadius: 14,
-                  borderTopRightRadius: isUser ? 4 : 14,
-                  borderTopLeftRadius: isUser ? 14 : 4,
-                  background: isUser ? "rgba(99,102,241,.15)" : "var(--surface)",
-                  border: isUser
-                    ? "1px solid rgba(99,102,241,.3)"
-                    : "1px solid var(--border)",
+                  padding: "13px 16px",
+                  borderRadius: "var(--radius)",
+                  borderTopRightRadius: isUser ? 5 : "var(--radius)",
+                  borderTopLeftRadius: isUser ? "var(--radius)" : 5,
+                  ...(isUser
+                    ? {
+                        background: "rgba(124,140,255,.16)",
+                        border: "1px solid rgba(124,140,255,.32)",
+                      }
+                    : { boxShadow: "var(--shadow)" }),
                   whiteSpace: "pre-wrap",
-                  lineHeight: 1.55,
+                  lineHeight: 1.6,
                   fontSize: 15,
+                  color: "var(--text)",
                 }}
               >
                 {m.content}
                 {m.sources && m.sources.length > 0 && (
                   <div
                     style={{
-                      marginTop: 12,
-                      fontSize: 13,
+                      marginTop: 14,
+                      fontSize: 13.5,
                       borderLeft: "2px solid var(--accent)",
-                      paddingLeft: 12,
-                      background: "var(--surface-2)",
-                      borderRadius: "0 8px 8px 0",
-                      padding: "8px 12px",
+                      background: "rgba(255,255,255,.025)",
+                      borderRadius: "0 10px 10px 0",
+                      padding: "10px 14px",
                     }}
                   >
                     <div
                       style={{
-                        fontSize: 11,
+                        fontSize: 10.5,
                         textTransform: "uppercase",
-                        letterSpacing: ".04em",
+                        letterSpacing: ".09em",
+                        fontWeight: 600,
                         color: "var(--muted)",
-                        marginBottom: 4,
+                        marginBottom: 6,
                       }}
                     >
                       Sources
                     </div>
                     {m.sources.map((s, j) => (
-                      <div key={j} style={{ margin: "3px 0" }}>
-                        <span style={{ color: "var(--muted)" }}>[{j + 1}]</span>{" "}
+                      <div key={j} style={{ margin: "5px 0", display: "flex", gap: 7 }}>
+                        <span style={{ color: "var(--accent)", fontWeight: 600 }}>
+                          {j + 1}.
+                        </span>
                         <a href={s.url} target="_blank" rel="noreferrer">
                           {s.title}
                         </a>
@@ -250,32 +294,34 @@ export default function ChatPage() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 6,
-                marginBottom: 5,
-                fontSize: 12,
+                gap: 7,
+                marginBottom: 7,
+                fontSize: 11.5,
                 fontWeight: 600,
+                letterSpacing: ".02em",
                 color: "var(--muted)",
               }}
             >
               <span
                 aria-hidden
                 style={{
-                  width: 7,
-                  height: 7,
+                  width: 8,
+                  height: 8,
                   borderRadius: "50%",
-                  background: "var(--success)",
+                  background: "var(--grad)",
+                  boxShadow: "0 0 8px rgba(42,215,208,.55)",
                   display: "inline-block",
                 }}
               />
               Radar
             </div>
             <div
+              className="glass"
               style={{
-                padding: "11px 14px",
-                borderRadius: 14,
-                borderTopLeftRadius: 4,
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
+                padding: "13px 16px",
+                borderRadius: "var(--radius)",
+                borderTopLeftRadius: 5,
+                boxShadow: "var(--shadow)",
                 color: "var(--muted)",
                 fontSize: 15,
               }}
@@ -290,11 +336,14 @@ export default function ChatPage() {
       </div>
 
       <div
+        className="glass"
         style={{
           display: "flex",
           gap: 10,
-          padding: "14px 0",
-          borderTop: "1px solid var(--border)",
+          padding: 10,
+          marginBottom: 14,
+          borderRadius: 999,
+          boxShadow: "var(--shadow)",
         }}
       >
         <input
@@ -305,14 +354,15 @@ export default function ChatPage() {
             if (e.key === "Enter") send();
           }}
           placeholder="Ask the knowledge base…"
-          style={{ flex: 1 }}
+          style={{ flex: 1, borderRadius: 999, background: "transparent" }}
         />
         <button
           onClick={() => send()}
           disabled={loading}
           className="btn btn-primary"
           style={{
-            minWidth: 90,
+            minWidth: 96,
+            borderRadius: 999,
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",

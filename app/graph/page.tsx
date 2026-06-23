@@ -464,7 +464,9 @@ export default function GraphPage() {
 
   return (
     <div style={{ color: "var(--text)" }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 6px" }}>🕸️ Knowledge graph</h1>
+      <h1 className="gradient-text" style={{ fontSize: 30, fontWeight: 700, margin: "0 0 6px" }}>
+        Knowledge graph
+      </h1>
       <p style={{ color: "var(--muted)", margin: "0 0 16px", fontSize: 13 }}>
         Papers clustered by topic; lines show paper-to-paper relations (cites / similar).
         Drag to pan, scroll to zoom, hover for titles, click a paper to open it.

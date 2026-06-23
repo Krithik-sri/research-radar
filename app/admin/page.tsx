@@ -15,20 +15,50 @@ function Pre({ value }: { value: unknown }) {
       style={{
         background: "var(--surface-2)",
         border: "1px solid var(--border)",
-        borderRadius: 10,
-        padding: 14,
+        borderRadius: 12,
+        padding: 16,
         fontSize: 12.5,
+        lineHeight: 1.65,
         color: "var(--text)",
         overflowX: "auto",
-        marginTop: 14,
+        marginTop: 16,
         marginBottom: 0,
         whiteSpace: "pre-wrap",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,.03)",
         fontFamily:
           "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
       }}
     >
       {JSON.stringify(value, null, 2)}
     </pre>
+  );
+}
+
+function StatPill({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "baseline",
+        gap: 7,
+        padding: "5px 12px",
+        borderRadius: 999,
+        background: "var(--surface-2)",
+        border: "1px solid var(--border)",
+        fontSize: 13,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 600,
+          color: "var(--text)",
+        }}
+      >
+        {value}
+      </span>
+      <span style={{ color: "var(--muted)", fontSize: 12 }}>{label}</span>
+    </span>
   );
 }
 
@@ -98,11 +128,12 @@ export default function AdminPage() {
   }
 
   const sectionStyle: React.CSSProperties = {
-    padding: 22,
+    padding: 24,
     marginBottom: 20,
   };
   const sectionTitle: React.CSSProperties = {
-    fontSize: 17,
+    fontFamily: "var(--font-display)",
+    fontSize: 18,
     marginTop: 0,
     marginBottom: 6,
   };
@@ -110,11 +141,12 @@ export default function AdminPage() {
     color: "var(--muted)",
     fontSize: 13,
     marginTop: 0,
-    marginBottom: 14,
+    marginBottom: 16,
   };
   const errStyle: React.CSSProperties = {
     color: "var(--danger)",
     fontSize: 13,
+    marginTop: 12,
     marginBottom: 0,
   };
 
@@ -126,22 +158,47 @@ export default function AdminPage() {
         padding: "8px 0 80px",
       }}
     >
-      <h1 style={{ fontSize: 26, marginBottom: 4 }}>Research Radar — Admin</h1>
-      <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 0 }}>
-        {overview
-          ? `${overview.relevant} relevant papers · latest ${overview.latest ?? "—"}`
-          : "Loading overview…"}
-      </p>
+      <header className="fade-in" style={{ marginBottom: 4 }}>
+        <h1
+          className="gradient-text"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 32,
+            margin: "0 0 6px",
+            lineHeight: 1.15,
+          }}
+        >
+          Research Radar — Admin
+        </h1>
+        <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 14px" }}>
+          Crawl, index, and curate the paper corpus.
+        </p>
+        {overview ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <StatPill label="total" value={overview.total} />
+            <StatPill label="relevant" value={overview.relevant} />
+            <StatPill label="latest" value={overview.latest ?? "—"} />
+          </div>
+        ) : (
+          <p style={{ color: "var(--muted)", fontSize: 13, margin: 0 }}>
+            Loading overview…
+          </p>
+        )}
+      </header>
 
       <div
+        className="fade-in"
         style={{
-          background: "rgba(248,113,113,.1)",
-          border: "1px solid rgba(248,113,113,.3)",
+          background: "rgba(251,113,133,.1)",
+          border: "1px solid rgba(251,113,133,.3)",
           borderRadius: "var(--radius)",
-          padding: 14,
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          padding: 16,
           fontSize: 13,
+          lineHeight: 1.55,
           color: "var(--text)",
-          margin: "20px 0 28px",
+          margin: "22px 0 28px",
         }}
       >
         These actions crawl arXiv and call the LLM/embedding APIs — they spend
@@ -149,7 +206,10 @@ export default function AdminPage() {
       </div>
 
       {/* Index a paper */}
-      <section className="card fade-in" style={sectionStyle}>
+      <section
+        className="card fade-in"
+        style={{ ...sectionStyle, animationDelay: "0.05s" }}
+      >
         <h2 style={sectionTitle}>Index a paper</h2>
         <p style={sectionDesc}>
           Fetch a single paper from arXiv by id and run it through the pipeline.
@@ -183,7 +243,10 @@ export default function AdminPage() {
       </section>
 
       {/* Crawl a month */}
-      <section className="card fade-in" style={sectionStyle}>
+      <section
+        className="card fade-in"
+        style={{ ...sectionStyle, animationDelay: "0.1s" }}
+      >
         <h2 style={sectionTitle}>Crawl a month</h2>
         <p style={sectionDesc}>
           Fetch a month of arXiv submissions in the configured categories and
@@ -229,11 +292,25 @@ export default function AdminPage() {
       </section>
 
       {/* Browse by topic */}
-      <section className="card fade-in" style={sectionStyle}>
+      <section
+        className="card fade-in"
+        style={{ ...sectionStyle, animationDelay: "0.15s" }}
+      >
         <h2 style={sectionTitle}>Browse by topic</h2>
+        <p style={sectionDesc}>
+          Jump straight into the paper feed filtered to a research area.
+        </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
           {TOPICS.map((t) => (
-            <a key={t.slug} href={`/papers?topic=${t.slug}`} className="chip">
+            <a
+              key={t.slug}
+              href={`/papers?topic=${t.slug}`}
+              className="chip"
+              style={{
+                textDecoration: "none",
+                transition: "background .15s ease, border-color .15s ease, color .15s ease",
+              }}
+            >
               {t.name}
             </a>
           ))}
