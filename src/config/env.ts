@@ -38,7 +38,7 @@ export const env = {
   // LLM provider: "groq" | "gemini" | "openrouter". Picks which chat backend
   // chat()/chatJSON() dispatch to. Embeddings always use Gemini (Groq has none).
   get llmProvider() {
-    return opt("LLM_PROVIDER", "gemini").toLowerCase();
+    return opt("LLM_PROVIDER", "groq").toLowerCase();
   },
 
   // Groq (OpenAI-compatible chat; free tier with high daily limits)
