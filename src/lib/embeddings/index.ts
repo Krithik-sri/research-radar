@@ -12,8 +12,10 @@ function provider() {
   return env.embedProvider === "gemini" ? gemini : jina;
 }
 
-export function embed(text: string): Promise<number[]> {
-  return provider().embed(text);
+export type EmbedTask = "query" | "passage";
+
+export function embed(text: string, opts: { task?: EmbedTask } = {}): Promise<number[]> {
+  return provider().embed(text, opts);
 }
 
 export function embedBatch(texts: string[], delayMs?: number): Promise<number[][]> {

@@ -9,12 +9,16 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * Embed a single text with Gemini text-embedding-004 (768-dim).
  * Retries on 429/5xx for free-tier rate limits.
  */
-export async function embed(text: string): Promise<number[]> {
+export async function embed(
+  text: string,
+  opts: { task?: "query" | "passage" } = {},
+): Promise<number[]> {
   const model = env.geminiEmbedModel;
   const url = `${GEMINI_BASE}/models/${model}:embedContent?key=${env.geminiKey}`;
   const body = {
     model: `models/${model}`,
     content: { parts: [{ text: text.slice(0, 8000) }] },
+    taskType: opts.task === "query" ? "RETRIEVAL_QUERY" : "RETRIEVAL_DOCUMENT",
     outputDimensionality: EMBED_DIM,
   };
 

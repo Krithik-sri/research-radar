@@ -1,0 +1,296 @@
+/* ── Research Radar — dark design system ──────────────────────────────── */
+:root {
+  --bg: #0b0d12;
+  --surface: #14171f;
+  --surface-2: #1b1f29;
+  --surface-3: #232838;
+  --border: #262b36;
+  --border-2: #36405a;
+  --text: #e6e8ee;
+  --muted: #8b93a7;
+  --accent: #6366f1;
+  --accent-2: #22d3ee;
+  --accent-hover: #818cf8;
+  --success: #34d399;
+  --danger: #f87171;
+  --radius: 12px;
+  --shadow: 0 6px 28px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background:
+    radial-gradient(1100px 560px at 50% -12%, #171b29 0%, rgba(23, 27, 41, 0) 62%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent-hover);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+a:hover {
+  color: var(--accent-2);
+}
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+}
+code {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 0.85em;
+}
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a3040;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-2);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 13px 0;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(11, 13, 18, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.nav .brand {
+  font-weight: 700;
+}
+.nav-link {
+  color: var(--muted);
+  font-size: 14px;
+  position: relative;
+  padding: 4px 2px;
+}
+.nav-link:hover {
+  color: var(--text);
+}
+.nav-link.active {
+  color: var(--text);
+}
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -14px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+/* ── Components ───────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-2);
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease;
+}
+.btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #4f46e5);
+  border: none;
+  color: #fff;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  border: none;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+}
+
+.input {
+  font: inherit;
+  font-size: 15px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.input::placeholder {
+  color: var(--muted);
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.chip {
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.14);
+  color: var(--accent-hover);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+/* ── Animations ───────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease both;
+}
+.slide-up {
+  animation: slideUp 0.28s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1e29 25%, #232b3a 37%, #1a1e29 63%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+.dots span {
+  animation: pulse 1.2s infinite;
+}
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

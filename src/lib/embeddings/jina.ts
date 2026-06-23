@@ -14,11 +14,14 @@ interface JinaResponse {
   data?: { index: number; embedding: number[] }[];
 }
 
+export type EmbedTask = "query" | "passage";
+
 /** Embed a batch of texts in one request (Jina supports up to ~2048 inputs). */
-async function embedMany(texts: string[]): Promise<number[][]> {
+async function embedMany(texts: string[], task: EmbedTask = "passage"): Promise<number[][]> {
   const body = {
     model: env.jinaModel,
-    task: "retrieval.passage",
+    // Asymmetric retrieval: queries and documents use different task adapters.
+    task: task === "query" ? "retrieval.query" : "retrieval.passage",
     dimensions: EMBED_DIM,
     input: texts.map((t) => t.slice(0, 8000)),
   };
@@ -55,8 +58,8 @@ async function embedMany(texts: string[]): Promise<number[][]> {
   throw new Error("Jina embed failed after retries");
 }
 
-export async function embed(text: string): Promise<number[]> {
-  const [v] = await embedMany([text]);
+export async function embed(text: string, opts: { task?: EmbedTask } = {}): Promise<number[]> {
+  const [v] = await embedMany([text], opts.task ?? "passage");
   if (!v?.length) throw new Error("Jina returned empty embedding");
   return v;
 }

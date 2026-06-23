@@ -1,7 +1,7 @@
 import { env } from "@/config/env";
 import { RateLimitError } from "./errors";
 import { geminiChat } from "./gemini";
-import { groqChat } from "./groq";
+import { groqChat, groqChatStream } from "./groq";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
@@ -29,6 +29,22 @@ export async function chat(messages: ChatMessage[], opts: ChatOpts = {}): Promis
   if (env.llmProvider === "groq") return groqChat(messages, opts);
   if (env.llmProvider === "gemini") return geminiChat(messages, opts);
   return openrouterChat(messages, opts);
+}
+
+/**
+ * Streaming chat — yields content deltas. Groq streams natively; other providers
+ * fall back to a single chunk (the full non-streamed answer) so callers can treat
+ * the interface uniformly.
+ */
+export async function* chatStream(
+  messages: ChatMessage[],
+  opts: ChatOpts = {},
+): AsyncGenerator<string> {
+  if (env.llmProvider === "groq") {
+    yield* groqChatStream(messages, opts);
+    return;
+  }
+  yield await chat(messages, opts);
 }
 
 /** Single chat completion via OpenRouter. Retries on 429/5xx with backoff. */

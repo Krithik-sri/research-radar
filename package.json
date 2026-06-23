@@ -17,6 +17,8 @@
     "test:llm": "tsx scripts/test-llm.ts",
     "test:slack": "tsx scripts/test-slack.ts",
     "ask": "tsx scripts/ask.ts",
+    "stats": "tsx scripts/stats.ts",
+    "reclassify": "tsx scripts/reclassify.ts",
     "discord:register": "tsx scripts/register-discord-commands.ts",
     "inngest:dev": "inngest-cli dev"
   },

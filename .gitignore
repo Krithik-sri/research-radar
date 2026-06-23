@@ -9,3 +9,4 @@ out
 .vercel
 .drizzle
 dist
+*.tsbuildinfo
